@@ -1,19 +1,17 @@
 
 local circles = {}
-
 -- Calculate the values for the segments of the circles
 do
 	local sqrt2 = math.sqrt(2) * 0.5
 	local rad90 = math.rad(90)
+	local pos = vector.new(sqrt2, 0, sqrt2)
+	local vel = vector.new((1 - sqrt2) * 2, 0, -sqrt2)
+	local acc = vector.new((1 - sqrt2) * -2, 0, 0)
 	local axes = {
 		x = vector.new(1, 0, 0),
 		y = vector.new(0, 1, 0),
 		z = vector.new(0, 0, 1),
 	}
-	local pos = vector.new(sqrt2, 0, sqrt2)
-	local vel = vector.new((1 - sqrt2) * 2, 0, -sqrt2)
-	local acc = vector.new((1 - sqrt2) * -2, 0, 0)
-
 	for _,axis in ipairs({"y", "x", "z"}) do  -- This order is important
 		circles[axis] = {}
 		if axis == "x" then
@@ -35,7 +33,7 @@ do
 	end
 end
 
-local function get_options(options)
+local function get_valid_options(options)
 	if type(options) ~= "table" then
 		options = {}
 	end
@@ -57,6 +55,8 @@ local function get_options(options)
 	return color, name, time, density
 end
 
+--------------------------------------------------
+-- API Functions. See API.md for details.
 --------------------------------------------------
 
 function vizlib.select_color()
@@ -80,7 +80,7 @@ function vizlib.clear_particles(ids)
 end
 
 function vizlib.draw_circle(pos, radius, axis, options)
-	local color, name, time, density = get_options(options)
+	local color, name, time, density = get_valid_options(options)
 	local ids, vel, acc = {}
 	for _,segment in pairs(circles[axis] or {}) do
 		pos = vector.add(pos, vector.multiply(segment.pos, radius))
@@ -116,7 +116,7 @@ function vizlib.draw_sphere(pos, radius, options)
 end
 
 function vizlib.draw_line(pos1, pos2, options)
-	local color, name, time, density = get_options(options)
+	local color, name, time, density = get_valid_options(options)
 	local distance = vector.distance(pos1, pos2)
 	local dir = vector.direction(pos1, pos2)
 	local vel = vector.multiply(dir, distance * 0.5)
@@ -139,6 +139,32 @@ function vizlib.draw_line(pos1, pos2, options)
 		texture = "vizlib_particle.png^[multiply:"..color,
 		glow = 14,
 	})
+end
+
+function vizlib.draw_square(pos, radius, axis, options)
+	local p1, p2, p3, p4
+	if axis == "x" then
+		p1 = vector.add(pos, vector.new(0, -radius, -radius))
+		p2 = vector.add(pos, vector.new(0,  radius, -radius))
+		p3 = vector.add(pos, vector.new(0,  radius,  radius))
+		p4 = vector.add(pos, vector.new(0, -radius,  radius))
+	elseif axis == "y" then
+		p1 = vector.add(pos, vector.new(-radius, 0, -radius))
+		p2 = vector.add(pos, vector.new( radius, 0, -radius))
+		p3 = vector.add(pos, vector.new( radius, 0,  radius))
+		p4 = vector.add(pos, vector.new(-radius, 0,  radius))
+	elseif axis == "z" then
+		p1 = vector.add(pos, vector.new(-radius, -radius, 0))
+		p2 = vector.add(pos, vector.new( radius, -radius, 0))
+		p3 = vector.add(pos, vector.new( radius,  radius, 0))
+		p4 = vector.add(pos, vector.new(-radius,  radius, 0))
+	end
+	return {
+		vizlib.draw_line(p1, p2, options),
+		vizlib.draw_line(p2, p3, options),
+		vizlib.draw_line(p3, p4, options),
+		vizlib.draw_line(p4, p1, options),
+	}
 end
 
 function vizlib.draw_cube(pos, radius, options)
