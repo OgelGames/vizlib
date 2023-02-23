@@ -5,12 +5,12 @@
 - [`vizlib.colors`](#vizlibcolors)
 - [`vizlib.select_color()`](#vizlibselect_color)
 - [`vizlib.random_color()`](#vizlibrandom_color)
-- [`vizlib.draw_circle(pos, radius, axis, options)`](#vizlibdraw_circle)
-- [`vizlib.draw_sphere(pos, radius, options)`](#vizlibdraw_sphere)
-- [`vizlib.draw_line(pos1, pos2, options)`](#vizlibdraw_line)
-- [`vizlib.draw_square(pos, radius, axis, options)`](#vizlibcolorsdraw_square)
-- [`vizlib.draw_cube(pos, radius, options)`](#vizlibdraw_cube)
-- [`vizlib.draw_area(pos1, pos2, options)`](#vizlibdraw_area)
+- [`vizlib.draw_circle(pos, radius, axis, options)`](#vizlibdraw_circlepos-radius-axis-options)
+- [`vizlib.draw_sphere(pos, radius, options)`](#vizlibdraw_spherepos-radius-options)
+- [`vizlib.draw_line(pos1, pos2, options)`](#vizlibdraw_linepos1-pos2-options)
+- [`vizlib.draw_square(pos, radius, axis, options)`](#vizlibcolorsdraw_squarepos-radius-axis-options)
+- [`vizlib.draw_cube(pos, radius, options)`](#vizlibdraw_cubepos-radius-options)
+- [`vizlib.draw_area(pos1, pos2, options)`](#vizlibdraw_areapos1-pos2-options)
 - [`vizlib.erase_shape(shape)`](#vizliberase_shapeshape)
 
 ## Colors
@@ -37,6 +37,19 @@ Generates a completely random color.
 
 
 ## Drawing
+
+#### **`vizlib.draw_circle(pos, radius, axis, options)`**
+
+#### **`vizlib.draw_sphere(pos, radius, options)`**
+
+#### **`vizlib.draw_line(pos1, pos2, options)`**
+
+#### **`vizlib.draw_square(pos, radius, axis, options)`**
+
+#### **`vizlib.draw_cube(pos, radius, options)`**
+
+#### **`vizlib.draw_area(pos1, pos2, options)`**
+
 
 ## Utility
 
