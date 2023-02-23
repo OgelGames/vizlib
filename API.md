@@ -11,7 +11,7 @@
 - [`vizlib.draw_square(pos, radius, axis, options)`](#vizlibcolorsdraw_square)
 - [`vizlib.draw_cube(pos, radius, options)`](#vizlibdraw_cube)
 - [`vizlib.draw_area(pos1, pos2, options)`](#vizlibdraw_area)
-- [`vizlib.clear_particles(ids)`](#vizlibclear_particles)
+- [`vizlib.erase_shape(shape)`](#vizliberase_shapeshape)
 
 ## Colors
 
@@ -40,7 +40,7 @@ Generates a completely random color.
 
 ## Utility
 
-#### **`vizlib.erase_shape(shape)`**
+#### **`vizlib.erase_shape(shape, test)`**
 
 Removes a shape from the world.
 
