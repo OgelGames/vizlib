@@ -8,7 +8,7 @@
 - [`vizlib.draw_circle(pos, radius, axis, options)`](#vizlibdraw_circlepos-radius-axis-options)
 - [`vizlib.draw_sphere(pos, radius, options)`](#vizlibdraw_spherepos-radius-options)
 - [`vizlib.draw_line(pos1, pos2, options)`](#vizlibdraw_linepos1-pos2-options)
-- [`vizlib.draw_square(pos, radius, axis, options)`](#vizlibcolorsdraw_squarepos-radius-axis-options)
+- [`vizlib.draw_square(pos, radius, axis, options)`](#vizlibdraw_squarepos-radius-axis-options)
 - [`vizlib.draw_cube(pos, radius, options)`](#vizlibdraw_cubepos-radius-options)
 - [`vizlib.draw_area(pos1, pos2, options)`](#vizlibdraw_areapos1-pos2-options)
 - [`vizlib.erase_shape(shape)`](#vizliberase_shapeshape)
@@ -53,7 +53,7 @@ Generates a completely random color.
 
 ## Utility
 
-#### **`vizlib.erase_shape(shape, test)`**
+#### **`vizlib.erase_shape(shape)`**
 
 Removes a shape from the world.
 
