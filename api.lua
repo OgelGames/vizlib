@@ -55,68 +55,41 @@ local function get_valid_options(options)
 	return color, name, time, density
 end
 
---------------------------------------------------
--- API Functions. See API.md for details.
---------------------------------------------------
-
-function vizlib.select_color()
-	return vizlib.colors[math.random(24)].hex
-end
-
-function vizlib.random_color()
-	local r = math.random(0, 255)
-	local g = math.random(0, 255)
-	local b = math.random(0, 255)
-	return string.format("#%02x%02x%02x", r, g, b)
-end
-
-function vizlib.clear_particles(ids)
+local function make_shape(name, time, ids)
+	local shape = {name = name}
+	if time > 0 then
+		shape.expiry = os.time() + time
+	end
 	if type(ids) ~= "table" then
-		ids = {ids}
+		shape.ids = {ids}
+	else
+		shape.ids = ids
 	end
-	for _,id in pairs(ids) do
-		minetest.delete_particlespawner(id)
-	end
+	return shape
 end
 
-function vizlib.draw_circle(pos, radius, axis, options)
-	local color, name, time, density = get_valid_options(options)
-	local ids, vel, acc = {}
-	for _,segment in pairs(circles[axis] or {}) do
-		pos = vector.add(pos, vector.multiply(segment.pos, radius))
-		vel = vector.multiply(segment.vel, radius)
-		acc = vector.multiply(segment.acc, radius)
-		table.insert(ids, minetest.add_particlespawner({
-			playername = name,
-			time = time,
-			amount = radius * density * 8,
-			minpos = pos,
-			maxpos = pos,
-			minvel = vel,
-			maxvel = vel,
-			minacc = acc,
-			maxacc = acc,
-			minexptime = 2,
-			maxexptime = 2,
-			texture = "vizlib_particle.png^[multiply:"..color,
-			glow = 14,
-		}))
-	end
-	return ids
+local function make_arc(arc, pos, radius, color, name, time, density)
+	pos = vector.add(pos, vector.multiply(arc.pos, radius))
+	local vel = vector.multiply(arc.vel, radius)
+	local acc = vector.multiply(arc.acc, radius)
+	return minetest.add_particlespawner({
+		playername = name,
+		time = time,
+		amount = radius * density * 8,
+		minpos = pos,
+		maxpos = pos,
+		minvel = vel,
+		maxvel = vel,
+		minacc = acc,
+		maxacc = acc,
+		minexptime = 2,
+		maxexptime = 2,
+		texture = "vizlib_particle.png^[multiply:"..color,
+		glow = 14,
+	})
 end
 
-function vizlib.draw_sphere(pos, radius, options)
-	local ids = {}
-	for axis in pairs(circles) do
-		for _,id in pairs(vizlib.draw_circle(pos, radius, axis, options)) do
-			table.insert(ids, id)
-		end
-	end
-	return ids
-end
-
-function vizlib.draw_line(pos1, pos2, options)
-	local color, name, time, density = get_valid_options(options)
+local function make_line(pos1, pos2, color, name, time, density)
 	local distance = vector.distance(pos1, pos2)
 	local dir = vector.direction(pos1, pos2)
 	local vel = vector.multiply(dir, distance * 0.5)
@@ -141,7 +114,49 @@ function vizlib.draw_line(pos1, pos2, options)
 	})
 end
 
+--------------------------------------------------
+-- API Functions. See API.md for details.
+--------------------------------------------------
+
+function vizlib.select_color()
+	return vizlib.colors[math.random(24)].hex
+end
+
+function vizlib.random_color()
+	local r = math.random(0, 255)
+	local g = math.random(0, 255)
+	local b = math.random(0, 255)
+	return string.format("#%02x%02x%02x", r, g, b)
+end
+
+function vizlib.draw_circle(pos, radius, axis, options)
+	local color, name, time, density = get_valid_options(options)
+	local ids = {}
+	for _,arc in pairs(circles[axis]) do
+		table.insert(ids, make_arc(arc, pos, radius, color, name, time, density))
+	end
+	return make_shape(name, time, ids)
+end
+
+function vizlib.draw_sphere(pos, radius, options)
+	local color, name, time, density = get_valid_options(options)
+	local ids = {}
+	for _,circle in pairs(circles) do
+		for _,arc in pairs(circle) do
+			table.insert(ids, make_arc(arc, pos, radius, color, name, time, density))
+		end
+	end
+	return make_shape(name, time, ids)
+end
+
+function vizlib.draw_line(pos1, pos2, options)
+	local color, name, time, density = get_valid_options(options)
+	local ids = make_line(pos1, pos2, color, name, time, density)
+	return make_shape(name, time, ids)
+end
+
 function vizlib.draw_square(pos, radius, axis, options)
+	local color, name, time, density = get_valid_options(options)
 	local p1, p2, p3, p4
 	if axis == "x" then
 		p1 = vector.add(pos, vector.new(0, -radius, -radius))
@@ -159,15 +174,17 @@ function vizlib.draw_square(pos, radius, axis, options)
 		p3 = vector.add(pos, vector.new( radius,  radius, 0))
 		p4 = vector.add(pos, vector.new(-radius,  radius, 0))
 	end
-	return {
-		vizlib.draw_line(p1, p2, options),
-		vizlib.draw_line(p2, p3, options),
-		vizlib.draw_line(p3, p4, options),
-		vizlib.draw_line(p4, p1, options),
+	local ids = {
+		make_line(p1, p2, color, name, time, density),
+		make_line(p2, p3, color, name, time, density),
+		make_line(p3, p4, color, name, time, density),
+		make_line(p4, p1, color, name, time, density),
 	}
+	return make_shape(name, time, ids)
 end
 
 function vizlib.draw_cube(pos, radius, options)
+	local color, name, time, density = get_valid_options(options)
 	local p1 = vector.add(pos, vector.new(-radius,  radius, -radius))
 	local p2 = vector.add(pos, vector.new( radius,  radius, -radius))
 	local p3 = vector.add(pos, vector.new( radius,  radius,  radius))
@@ -176,26 +193,28 @@ function vizlib.draw_cube(pos, radius, options)
 	local p6 = vector.add(pos, vector.new( radius, -radius, -radius))
 	local p7 = vector.add(pos, vector.new( radius, -radius,  radius))
 	local p8 = vector.add(pos, vector.new(-radius, -radius,  radius))
-	return {
+	local ids = {
 		-- Top
-		vizlib.draw_line(p1, p2, options),
-		vizlib.draw_line(p2, p3, options),
-		vizlib.draw_line(p3, p4, options),
-		vizlib.draw_line(p4, p1, options),
+		make_line(p1, p2, color, name, time, density),
+		make_line(p2, p3, color, name, time, density),
+		make_line(p3, p4, color, name, time, density),
+		make_line(p4, p1, color, name, time, density),
 		-- Bottom
-		vizlib.draw_line(p5, p6, options),
-		vizlib.draw_line(p6, p7, options),
-		vizlib.draw_line(p7, p8, options),
-		vizlib.draw_line(p8, p5, options),
+		make_line(p5, p6, color, name, time, density),
+		make_line(p6, p7, color, name, time, density),
+		make_line(p7, p8, color, name, time, density),
+		make_line(p8, p5, color, name, time, density),
 		-- Sides
-		vizlib.draw_line(p1, p5, options),
-		vizlib.draw_line(p2, p6, options),
-		vizlib.draw_line(p3, p7, options),
-		vizlib.draw_line(p4, p8, options),
+		make_line(p1, p5, color, name, time, density),
+		make_line(p2, p6, color, name, time, density),
+		make_line(p3, p7, color, name, time, density),
+		make_line(p4, p8, color, name, time, density),
 	}
+	return make_shape(name, time, ids)
 end
 
 function vizlib.draw_area(pos1, pos2, options)
+	local color, name, time, density = get_valid_options(options)
 	local minp, maxp = {}, {}
 	for _,c in pairs({"x", "y", "z"}) do
 		minp[c] = math.min(pos1[c], pos2[c])
@@ -209,21 +228,31 @@ function vizlib.draw_area(pos1, pos2, options)
 	local p6 = vector.new(maxp.x, minp.y, minp.z)
 	local p7 = vector.new(maxp.x, minp.y, maxp.z)
 	local p8 = vector.new(minp.x, minp.y, maxp.z)
-	return {
+	local ids = {
 		-- Top
-		vizlib.draw_line(p1, p2, options),
-		vizlib.draw_line(p2, p3, options),
-		vizlib.draw_line(p3, p4, options),
-		vizlib.draw_line(p4, p1, options),
+		make_line(p1, p2, color, name, time, density),
+		make_line(p2, p3, color, name, time, density),
+		make_line(p3, p4, color, name, time, density),
+		make_line(p4, p1, color, name, time, density),
 		-- Bottom
-		vizlib.draw_line(p5, p6, options),
-		vizlib.draw_line(p6, p7, options),
-		vizlib.draw_line(p7, p8, options),
-		vizlib.draw_line(p8, p5, options),
+		make_line(p5, p6, color, name, time, density),
+		make_line(p6, p7, color, name, time, density),
+		make_line(p7, p8, color, name, time, density),
+		make_line(p8, p5, color, name, time, density),
 		-- Sides
-		vizlib.draw_line(p1, p5, options),
-		vizlib.draw_line(p2, p6, options),
-		vizlib.draw_line(p3, p7, options),
-		vizlib.draw_line(p4, p8, options),
+		make_line(p1, p5, color, name, time, density),
+		make_line(p2, p6, color, name, time, density),
+		make_line(p3, p7, color, name, time, density),
+		make_line(p4, p8, color, name, time, density),
 	}
+	return make_shape(name, time, ids)
+end
+
+function vizlib.erase_shape(shape)
+	if type(shape) ~= "table" or not shape.ids then
+		return
+	end
+	for _,id in pairs(shape.ids) do
+		minetest.delete_particlespawner(id)
+	end
 end
