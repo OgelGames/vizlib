@@ -81,7 +81,7 @@ Removes a shape from the world.
 Useful for removing shapes created with `options.infinite = true`.
 
 **Arguments**
-- `shape` - The shape to be removed. Should be an unmodified return value from a drawing function.
+- `shape` - The shape to be removed.
 
 
 ## Drawing
