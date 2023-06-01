@@ -28,8 +28,6 @@ vizlib.colors = {
 	{name = "crimson",    hex = "#ff0040"}
 }
 
-vizlib.default_color = "#ff0000"
+vizlib.default_color = minetest.settings:get("vizlib_default_color") or "#ff0000"
 
-local MP = minetest.get_modpath("vizlib")
-
-dofile(MP.."/api.lua")
+dofile(minetest.get_modpath("vizlib").."/api.lua")
