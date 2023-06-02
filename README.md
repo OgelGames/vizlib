@@ -55,7 +55,7 @@ end
 
 ## Installation
 
-Download the [master branch](https://github.com/OgelGames/vizlib/archive/master.zip) or the [latest release](https://github.com/OgelGames/vizlib/releases), and follow [the usual installation steps](https://dev.minetest.net/Installing_Mods).
+Download the [master branch](https://github.com/OgelGames/vizlib/archive/master.zip) or the [latest release](https://github.com/OgelGames/vizlib/releases), and follow [the usual installation steps](https://wiki.minetest.net/Installing_Mods).
 
 ## License
 
