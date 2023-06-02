@@ -7,7 +7,8 @@
 ## Overview
 
 This mod is a code library for visualizing basic shapes in-game. You can draw lines, circles, cubes, spheres and more.
-It's ideal for showing the working area or range of functional nodes.
+
+It's ideal for showing the working area or range of functional nodes, and a better alternative to using entities.
 
 ![Overview](overview.gif?raw=true "Overview") 
 
