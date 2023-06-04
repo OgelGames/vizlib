@@ -3,6 +3,7 @@
 [![luacheck](https://github.com/OgelGames/vizlib/workflows/luacheck/badge.svg)](https://github.com/OgelGames/vizlib/actions)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE.md)
 [![Minetest](https://img.shields.io/badge/Minetest-5.0+-blue.svg)](https://www.minetest.net)
+[![ContentDB](https://content.minetest.net/packages/OgelGames/vizlib/shields/downloads/)](https://content.minetest.net/packages/OgelGames/vizlib/)
  
 ## Overview
 
@@ -57,6 +58,8 @@ end
 ## Installation
 
 Download the [master branch](https://github.com/OgelGames/vizlib/archive/master.zip) or the [latest release](https://github.com/OgelGames/vizlib/releases), and follow [the usual installation steps](https://wiki.minetest.net/Installing_Mods).
+
+Alternatively, you can download and install the mod from [ContentDB](https://content.minetest.net/packages/OgelGames/vizlib) or the online content tab in Minetest.
 
 ## License
 
