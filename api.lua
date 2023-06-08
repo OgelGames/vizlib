@@ -114,6 +114,21 @@ local function make_line(pos1, pos2, color, name, time, density)
 	})
 end
 
+local function make_point(pos, color, name, time, density)
+	return minetest.add_particlespawner({
+		playername = name,
+		time = time,
+		amount = density * 2,
+		minpos = pos,
+		maxpos = pos,
+		minexptime = 2.0,
+		maxexptime = 2.0,
+		texture = "vizlib_particle.png^[multiply:"..color,
+		glow = 14,
+		size = 1.5,
+	})
+end
+
 --------------------------------------------------
 -- API Functions. See API.md for details.
 --------------------------------------------------
@@ -127,6 +142,12 @@ function vizlib.random_color()
 	local g = math.random(0, 255)
 	local b = math.random(0, 255)
 	return string.format("#%02x%02x%02x", r, g, b)
+end
+
+function vizlib.draw_point(pos, options)
+	local color, name, time, density = get_valid_options(options)
+	local ids = make_point(pos, color, name, time, density)
+	return make_shape(name, time, ids)
 end
 
 function vizlib.draw_circle(pos, radius, axis, options)

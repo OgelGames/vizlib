@@ -10,6 +10,7 @@
 - [`vizlib.select_color()`](#vizlibselect_color)
 - [`vizlib.random_color()`](#vizlibrandom_color)
 - [`vizlib.erase_shape(shape)`](#vizliberase_shapeshape)
+- [`vizlib.draw_point(pos, options)`](#vizlibdraw_pointpos-options)
 - [`vizlib.draw_circle(pos, radius, axis, options)`](#vizlibdraw_circlepos-radius-axis-options)
 - [`vizlib.draw_sphere(pos, radius, options)`](#vizlibdraw_spherepos-radius-options)
 - [`vizlib.draw_line(pos1, pos2, options)`](#vizlibdraw_linepos1-pos2-options)
@@ -85,6 +86,14 @@ Useful for removing shapes created with `options.infinite = true`.
 
 
 ## Drawing
+
+#### **`vizlib.draw_point(pos, options)`**
+
+Draws a point (one slightly bigger particle).
+
+**Arguments**
+- `pos` - Vector. The position of the point.
+- `options` - Table. See [`options`](#options) above.
 
 #### **`vizlib.draw_circle(pos, radius, axis, options)`**
 
