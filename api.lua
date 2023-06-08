@@ -75,7 +75,7 @@ local function make_arc(arc, pos, radius, color, name, time, density)
 	return minetest.add_particlespawner({
 		playername = name,
 		time = time,
-		amount = radius * density * 8,
+		amount = math.ceil(radius * density * 6.0),
 		minpos = pos,
 		maxpos = pos,
 		minvel = vel,
@@ -92,17 +92,12 @@ end
 local function make_line(pos1, pos2, color, name, time, density)
 	local distance = vector.distance(pos1, pos2)
 	local dir = vector.direction(pos1, pos2)
-	local vel = vector.multiply(dir, distance * 0.5)
-	local expt = 2.0
-	if distance > 40 then
-		-- Increase exptime instead of velocity
-		vel = vector.multiply(dir, 20.0)
-		expt = distance / 20.0
-	end
+	local vel = vector.multiply(dir, math.min(distance, 10.0))
+	local expt = math.max(distance / 10.0, 1.0)
 	return minetest.add_particlespawner({
 		playername = name,
 		time = time,
-		amount = distance * density * 2,
+		amount = math.ceil(distance * density * 3.0),
 		minpos = pos1,
 		maxpos = pos1,
 		minvel = vel,
