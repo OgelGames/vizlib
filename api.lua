@@ -97,7 +97,7 @@ local function make_line(pos1, pos2, color, name, time, density)
 	return minetest.add_particlespawner({
 		playername = name,
 		time = time,
-		amount = math.ceil(distance * density * 3.0),
+		amount = math.ceil(math.min(distance, 10.0) * density * 3.0),
 		minpos = pos1,
 		maxpos = pos1,
 		minvel = vel,
